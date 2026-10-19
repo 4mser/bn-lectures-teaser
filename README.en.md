@@ -159,7 +159,7 @@ BITACORA.md          development log, version by version (Spanish)
 docs/assets/         GIFs and SVG for this README
 ```
 
-The 192 simulations and effects from all of B&N's videos, including those from earlier versions of this teaser, are cataloged in [bn-lectures-biblioteca](https://github.com/4mser/bn-lectures-biblioteca), with seven modules ready to reuse.
+The 192 simulations and effects from all of B&N's videos, including those from earlier versions of this teaser, are cataloged in [bn-lectures-biblioteca](https://github.com/4mser/bn-lectures-biblioteca), with seven modules ready to reuse. Several of them have an interactive version to explore in the browser in [bn-lab-simulations](https://github.com/4mser/bn-lab-simulations).
 
 ### `// 06` Team
 
