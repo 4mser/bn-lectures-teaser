@@ -23,10 +23,10 @@ SOFTWARE.
 -------------------------------------------------------------------------------
 
 The MIT License above does not cover the B&N Solutions name, the B&N mark and
-logo (including teaser/public/img/bn-mark.png and teaser/src/marca.json) or the
+logo (including public/img/bn-mark.png and src/marca.json) or the
 name "B&N Lectures". See TRADEMARKS.md.
 
-Third-party material keeps its own license: the fonts in teaser/public/fonts
-(SIL Open Font License 1.1, see teaser/public/fonts/OFL.txt) and the npm
+Third-party material keeps its own license: the fonts in public/fonts
+(SIL Open Font License 1.1, see public/fonts/OFL.txt) and the npm
 dependencies, including Remotion (https://remotion.dev/license).
 The song "Unbreakable Spirit" is not included (Pixabay Content License).

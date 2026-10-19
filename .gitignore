@@ -13,13 +13,12 @@ out/
 tmp/
 pylib
 pylib/
-biblioteca/tmp/
 
 # Música: la licencia de Pixabay no permite redistribuir el archivo suelto
-teaser/musica/*.mp3
-teaser/musica/*.wav
-teaser/public/musica.wav
+musica/*.mp3
+musica/*.wav
+public/musica.wav
 
 # Assets generados por las herramientas de Python
-teaser/public/sim/
-teaser/public/img/campo-*
+public/sim/
+public/img/campo-*

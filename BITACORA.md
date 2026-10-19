@@ -1,7 +1,7 @@
 # Bitácora del teaser de B&N Lectures
 
 > Este archivo es el registro de desarrollo del teaser, versión por versión. Para instalarlo, generar los assets y
-> renderizarlo, sigue el [README de la raíz](../README.md#-04-cómo-reproducirlo).
+> renderizarlo, sigue el [README](README.md#-04-cómo-reproducirlo).
 
 > **v1o-unbreakable (rama `v1o-unbreakable`).** La v1o aprobada, sin cambios de imagen, montada sobre la canción real
 > «Unbreakable Spirit» (RaspberryMusic, Pixabay; no se versiona ni se redistribuye suelta: `public/musica.wav` está en
@@ -17,7 +17,7 @@ Motion graphics generativo hecho con matemática real, sincronizado con una mús
 | `ClaseYT` | 16:9, 1920×1080 | `out/BN-Lectures-teaser-16x9.mp4` |
 | `ClaseTT` | 9:16, 1080×1920 | `out/BN-Lectures-teaser-9x16.mp4` |
 
-Nació de una copia de `../plantilla` (motor de líneas de campo de `src/lab/luz.ts` y fuentes), pero la línea de
+Nació de una copia de la plantilla de las clases ([`bn-lectures-clases/plantilla`](https://github.com/4mser/bn-lectures-clases/tree/main/plantilla)) (motor de líneas de campo de `src/lab/luz.ts` y fuentes), pero la línea de
 tiempo ya no depende de una voz: la fija el mapa de ritmo.
 
 ## Cómo funciona
@@ -282,8 +282,8 @@ tiempo ya no depende de una voz: la fija el mapa de ritmo.
 
 ## Comandos
 
-Los pasos completos, con requisitos, están en el [README de la raíz](../README.md#-04-cómo-reproducirlo). En corto,
-desde `teaser/` y con el entorno de Python activo (`requirements.txt`):
+Los pasos completos, con requisitos, están en el [README](README.md#-04-cómo-reproducirlo). En corto,
+desde la raíz del repositorio y con el entorno de Python activo (`requirements.txt`):
 
 ```bash
 npm ci

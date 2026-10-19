@@ -10,7 +10,7 @@
   <a href="README.md">Leer en español</a>
 </p>
 
-B&N Lectures are animated classes in mathematics, physics, computing, chaos and geometry, made by B&N Solutions. This repository holds the full source of its teaser (93 seconds, no narration, cut to a song, in 4:5, 16:9 and 9:16) and the library of the 192 simulations and effects that came out of B&N's videos so far.
+B&N Lectures are animated classes in mathematics, physics, computing, chaos and geometry, made by B&N Solutions. This repository holds the full source of its teaser: 93 seconds, no narration, cut to a song, in 4:5, 16:9 and 9:16. It is part of [B&N Lectures](https://github.com/4mser/bn-lectures), together with [the lessons](https://github.com/4mser/bn-lectures-clases) and [the simulation library](https://github.com/4mser/bn-lectures-biblioteca).
 
 It rests on one rule: **every frame is a function of time and of the music.** No scene keeps state between frames, so any frame can be rendered on its own, in any order and in parallel, and it comes out the same. And every scene is real physics or mathematics: the double slit solves the Schrödinger equation, field lines are integrated with RK4, and the Lorenz attractor runs with a million particles.
 
@@ -22,7 +22,7 @@ It rests on one rule: **every frame is a function of time and of the music.** No
 | **A hybrid engine** | Scenes in 2D canvas (`src/escenas.ts`) and in WebGL2 (`src/gl.ts`): a raymarched black hole, a prism, DNA, Lorenz and ink. On top, a retro CRT look with phosphor bloom, scanlines, curvature, grain, and chromatic aberration on the hits. |
 | **Precomputed simulations** | 2D Schrödinger, Gray-Scott reaction-diffusion and LIC textures of a two-charge field, in Python with numpy. One command regenerates them, byte for byte. |
 | **Locked to the song** | A rhythm map with every string note, kick, snare, impact and braam of the song, in seconds. Every cut, pulse and line of text is anchored to those times. |
-| **The library** | A catalog of 192 simulations and effects, each with a thumbnail, its equation or model, where it came from and how reusable it is, plus seven modules ready to copy. |
+| **The tools** | Chunked rendering with retries, single-frame review, contact sheets and sync measurement on the finished mp4. |
 
 ### `// 02` The scenes and their science
 
@@ -81,15 +81,15 @@ The animation was first designed on a fixed 120 BPM grid (one beat = 0.5 s). It 
 | | Version | Notes |
 |---|---|---|
 | Node.js | 20 or later (tested with 20.20) | With npm |
-| Remotion | 4.0.534 | Pinned in `teaser/package.json`; `npm ci` installs it and the first run downloads Chrome Headless Shell. Remotion has its own license: see [remotion.dev/license](https://www.remotion.dev/license) |
-| Python | 3 (tested with 3.14) | With `numpy`, `imageio-ffmpeg` (ships its own ffmpeg) and `pillow`, at the versions in `teaser/requirements.txt` |
+| Remotion | 4.0.534 | Pinned in `package.json`; `npm ci` installs it and the first run downloads Chrome Headless Shell. Remotion has its own license: see [remotion.dev/license](https://www.remotion.dev/license) |
+| Python | 3 (tested with 3.14) | With `numpy`, `imageio-ffmpeg` (ships its own ffmpeg) and `pillow`, at the versions in `requirements.txt` |
 | WebGL2 | Chrome with ANGLE | `remotion.config.ts` and the tools ask for `gl: "angle"`. Tested on macOS with Apple Silicon |
 
 **1. Install**
 
 ```bash
-git clone https://github.com/4mser/bn-lectures.git
-cd bn-lectures/teaser
+git clone https://github.com/4mser/bn-lectures-teaser.git
+cd bn-lectures-teaser
 npm ci
 python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
@@ -98,7 +98,7 @@ pip install -r requirements.txt
 **2. Get the music.** Pixabay's license does not allow redistributing the file on its own, so it is not in the repository. Download ["Unbreakable Spirit (Action Cinematic Epic)"](https://pixabay.com/music/adventure-unbreakable-spirit-action-cinematic-epic-591786/) by RaspberryMusic and save it as:
 
 ```
-teaser/musica/raspberrymusic-unbreakable-spirit-action-cinematic-epic-591786.mp3
+musica/raspberrymusic-unbreakable-spirit-action-cinematic-epic-591786.mp3
 ```
 
 To keep it somewhere else, pass its path in `CANCION=/path/to/file.mp3`. Then build the soundtrack:
@@ -144,50 +144,43 @@ python herramientas/render.py 300 4 ClaseTT   # → out/BN-Lectures-teaser-9x16.
 
 **Optional: regenerate the timing maps.** From the analysis in `datos/`, `python herramientas/conform_pulso.py` followed by `python herramientas/eventos_reales.py` rewrites `src/ritmo.json` byte for byte. `src/cancion.json` comes from the unedited song: decode it to `public/musica.wav` (`ffmpeg -i musica/<song>.mp3 -ar 48000 public/musica.wav`), run `SALIDA=src/cancion.json python herramientas/ritmo_cancion.py`, and go back to step 2.
 
-### `// 05` The library of 192 simulations
-
-[`biblioteca/`](biblioteca/README.md) catalogs every simulation and effect in B&N's videos: the electromagnetism series, the original reel and every version of the teaser. Each entry has a thumbnail, what it shows (with its equation or model), the file and function it came from, what it depends on and how reusable it is. The catalog is written in Spanish.
-
-| Category | Entries | | Category | Entries |
-|---|---|---|---|---|
-| Electric field | 79 | | Quantum | 6 |
-| Endings and logo | 16 | | Fractals | 6 |
-| Engines and post-processing | 16 | | Computing and AI | 5 |
-| Typography and credits | 15 | | Chaos | 4 |
-| Gravity and orbits | 13 | | Fluids | 2 |
-| Music and audio analysis | 10 | | Probability | 2 |
-| Waves | 9 | | Geometry and topology | 9 |
-
-The seven modules in `biblioteca/modulos/` are clean copies of the most reusable pieces, each with a `LEEME.md`: the WebGL2 engine (`motor-gpu`), the LIC textures (`lic`), music analysis and sync checks (`analisis-musica`), the Fourier-epicycle ending (`final-epiciclos`), the chained FDTD → Schrödinger → fluid → Gray-Scott → Ising simulator (`simulador-v6`), the series' canvas helpers (`lab-serie`) and the numpy music generators (`musica`).
-
-The catalog names B&N working projects that are not in this repository; of those, the final teaser and the modules are published.
-
-### `// 06` Layout
+### `// 05` Layout
 
 ```
-teaser/
-  src/                 Root.tsx (compositions) · Video.tsx (canvas, look and layers) · escenas.ts · gl.ts · final.ts
-                       titulos.ts · rotulos.ts · disposicion.ts (each format) · ritmo.ts + ritmo.json · cancion.json
-  herramientas/        simulations, LIC, song editing and analysis, chunked render, frame review
-  datos/               timing analysis of the song (no audio)
-  audio/               synthetic music generator from the first versions (not in the current pipeline)
-  musica/              the song's mp3 goes here (not versioned)
-  public/              fonts and bn-mark.png; the tools write sim/, img/campo-* and musica.wav here
-  README.md            development log, version by version (Spanish)
-biblioteca/
-  README.md            catalog of 192 simulations
-  miniaturas/          one image per entry
-  modulos/             reusable pieces with their LEEME.md
-  datos/ herramientas/ the catalog as data and the scripts that build the README and thumbnails
-docs/assets/           GIFs and SVG for this README
+src/                 Root.tsx (compositions) · Video.tsx (canvas, look and layers) · escenas.ts · gl.ts · final.ts
+                     titulos.ts · rotulos.ts · disposicion.ts (each format) · ritmo.ts + ritmo.json · cancion.json
+                     lab/luz.ts (the series' field-line engine)
+herramientas/        simulations, LIC, song editing and analysis, chunked render, frame review
+datos/               timing analysis of the song (no audio)
+audio/               synthetic music generator from the first versions (not in the current pipeline)
+musica/              the song's mp3 goes here (not versioned)
+public/              fonts and bn-mark.png; the tools write sim/, img/campo-* and musica.wav here
+BITACORA.md          development log, version by version (Spanish)
+docs/assets/         GIFs and SVG for this README
 ```
+
+The 192 simulations and effects from all of B&N's videos, including those from earlier versions of this teaser, are cataloged in [bn-lectures-biblioteca](https://github.com/4mser/bn-lectures-biblioteca), with seven modules ready to reuse.
+
+### `// 06` Team
+
+**Nicolás Moreno** · [@4mser](https://github.com/4mser) · [LinkedIn](https://www.linkedin.com/in/nicolasmorenoavila)<br>
+Creative and technical director of B&N Lectures. In this repository he designed and programmed:
+
+- the animation engine: canvas and WebGL2 scenes, the retro CRT look and the kinetic typography;
+- the system that syncs every frame to the music: audio analysis, beat conform and the song's real events;
+- the teaser's simulations: 2D Schrödinger, fluids, Gray-Scott, the field LIC, Chladni and Lorenz on the GPU;
+- the teaser in its three formats and the tools to render and review it.
+
+**Benjamín Campos** · [@B3njjaman](https://github.com/B3njjaman)<br>
+Co-founder of B&N Solutions. He made the original reel «De lo discreto a lo continuo» and the series' simulation engine, where `src/lab/luz.ts` comes from; it is taken from [BN_Electromagnetismo](https://github.com/B3njjaman/BN_Electromagnetismo) and published here with his permission, under the same MIT license.
+
+**Javier Patiño**<br>
+Physics graduate and lecturer. Author of the Electricity and Magnetism notes and derivations the lessons are based on, and the voice of B&N Lectures.
 
 ### `// 07` Credits
 
-- **Made by** [B&N Solutions](https://bnsolutions.cl).
-- **Series simulation engine** (`teaser/src/lab/`, `biblioteca/modulos/lab-serie`): Benjamín Campos, from [BN_Electromagnetismo](https://github.com/B3njjaman/BN_Electromagnetismo), published here with his permission under the same MIT license.
 - **Music:** "Unbreakable Spirit (Action Cinematic Epic)" by RaspberryMusic, on [Pixabay](https://pixabay.com/music/adventure-unbreakable-spirit-action-cinematic-epic-591786/), under the Pixabay Content License. Not included in the repository.
-- **Fonts:** Space Grotesk and IBM Plex Mono, under the SIL Open Font License 1.1 (`teaser/public/fonts/OFL.txt`).
+- **Fonts:** Space Grotesk and IBM Plex Mono, under the SIL Open Font License 1.1 (`public/fonts/OFL.txt`).
 - **Tools:** Remotion, React, TypeScript, WebGL2, numpy, Pillow and imageio-ffmpeg.
 - **Other people's techniques:** line integral convolution (Cabral and Leedom) and its animated form (Forssell), the three-body figure-eight orbit (Chenciner and Montgomery), Vogel's sunflower model, the Lorenz system and Gray and Scott's reaction-diffusion.
 
@@ -195,7 +188,7 @@ docs/assets/           GIFs and SVG for this README
 
 Code and documentation are under the [MIT License](LICENSE), © 2026 B&N Solutions.
 
-**The brand is excluded.** The B&N Solutions name, the B&N mark and logo, and the name "B&N Lectures" are not under MIT: they remain B&N Solutions', all rights reserved. `teaser/public/img/bn-mark.png` is included only because the render needs it. If you make your own video with this code, swap in your own mark. Details in [TRADEMARKS.md](TRADEMARKS.md).
+**The brand is excluded.** The B&N Solutions name, the B&N mark and logo, and the name "B&N Lectures" are not under MIT: they remain B&N Solutions', all rights reserved. `public/img/bn-mark.png` is included only because the render needs it. If you make your own video with this code, swap in your own mark. Details in [TRADEMARKS.md](TRADEMARKS.md).
 
 The song is not redistributed, and the fonts and npm dependencies keep their own licenses.
 

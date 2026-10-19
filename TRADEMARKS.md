@@ -5,9 +5,8 @@ B&N Solutions con todos los derechos reservados:
 
 - el nombre **B&N Solutions** y la marca **B&N**, con su logo;
 - el nombre **B&N Lectures**;
-- los archivos que reproducen la marca: `teaser/public/img/bn-mark.png`, `teaser/src/marca.json`,
-  `biblioteca/modulos/final-epiciclos/marca.json`, y los cuadros de `docs/assets/` y `biblioteca/miniaturas/` donde
-  aparece el logo.
+- los archivos que reproducen la marca: `public/img/bn-mark.png`, `src/marca.json` y los cuadros de `docs/assets/`
+  donde aparece el logo.
 
 `bn-mark.png` está en el repositorio solo porque el render lo necesita: las partículas del final aterrizan en sus
 píxeles y `herramientas/marca.py` saca de ahí los contornos de `marca.json`. Puedes usarlo para reproducir este teaser
@@ -23,8 +22,6 @@ o que forma parte de B&N Lectures. Si tienes dudas, escríbenos desde https://bn
 
 The MIT License covers the code and documentation in this repository. It does **not** cover the B&N Solutions name,
 the B&N mark and logo, or the name B&N Lectures, which remain all rights reserved, together with the files that
-reproduce the mark (`teaser/public/img/bn-mark.png`, `teaser/src/marca.json`,
-`biblioteca/modulos/final-epiciclos/marca.json`, and the frames in `docs/assets/` and `biblioteca/miniaturas/` that
-show the logo). `bn-mark.png` is included only because the render needs it. To make your own video, replace it with
+reproduce the mark (`public/img/bn-mark.png`, `src/marca.json` and the frames in `docs/assets/` that show the logo). `bn-mark.png` is included only because the render needs it. To make your own video, replace it with
 your own mark and run `herramientas/marca.py` again. Do not use the mark or the names in a way that suggests your work
 comes from, or is endorsed by, B&N Solutions.
