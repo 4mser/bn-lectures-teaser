@@ -1,4 +1,4 @@
-"""Uso: PYTHONPATH=../pylib python3 herramientas/tambores_nautilus.py
+"""Uso: python herramientas/tambores_nautilus.py  (después de herramientas/sonidos_lectures.py)
 Detecta en la pista final (public/musica.wav) el redoble de tambores que suena bajo el nautilus y lo guarda en
 src/ritmo.json como «tamboresNautilus» (segundos de escena, con su fuerza). Cada golpe agrega un tabique a la concha.
 Flujo espectral en tres bandas (40-180 Hz pesa más: toms y bombos), picos locales con 75 ms de separación mínima.

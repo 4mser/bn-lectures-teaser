@@ -69,7 +69,7 @@ La animación se diseñó primero sobre una grilla fija de 120 BPM (un pulso = 0
 1. **Análisis.** `datos/analisis-cancion.json` tiene los tiempos de la canción: pulsos, downbeats, frases, impactos, braams, risers, silencios y onsets por banda. Solo hay tiempos, sin audio.
 2. **Conform.** `herramientas/conform_pulso.py` hace que cada pulso de la animación sea un pulso de la canción (0,4616 s). Todo corre un 8,3 % más rápido; las escenas se ajustan repitiendo o quitando pulsos enteros, y los comienzos, finales y transiciones no se tocan. Escribe `src/ritmo.json`.
 3. **Edición.** La canción se edita por compases enteros (`herramientas/editar_cancion.py`): los empalmes caen en downbeats, con un crossfade de igual potencia de 20 ms. Queda en 93,28 s.
-4. **Eventos reales.** `herramientas/ritmo_cancion.py` detecta las 469 notas del ostinato de cuerdas, con sus acentos 3+3+2, y la batería (`src/cancion.json`). Cada nota manda un brillo fino que cruza las luces del cuadro; cada golpe, un barrido y un empuje de cámara de 0,7 %. `herramientas/eventos_reales.py` encuentra las tres gotas de la coda (88,62 · 89,08 · 89,55 s), que escriben LEC, TUR y ES.
+4. **Eventos reales.** `herramientas/ritmo_cancion.py` detecta las 469 notas del ostinato de cuerdas, con sus acentos 3+3+2, y la batería (`src/cancion.json`). Cada nota manda un brillo fino que cruza las luces del cuadro; cada golpe, un barrido y un empuje de cámara de 0,7 %. `herramientas/eventos_reales.py` encuentra las tres gotas de la coda (88,62 · 89,08 · 89,55 s), que escriben LEC, TUR y ES, y `herramientas/tambores_nautilus.py` los 22 golpes del redoble bajo el nautilus, uno por tabique.
 5. **Lectura.** `src/ritmo.ts` lee esos mapas y los pasa a tiempo de escena. Las escenas solo preguntan «¿qué pasa en el segundo t?».
 
 `herramientas/sincronia_audio.py` y `herramientas/correlacion_onsets.py` miden la sincronía sobre el mp4 terminado.
@@ -142,7 +142,7 @@ python herramientas/render.py 300 4 ClaseTT   # → out/BN-Lectures-teaser-9x16.
 
 `render.py` recibe el tamaño del tramo en cuadros, la concurrencia y la composición. Renderiza por tramos, cada uno en su propio proceso y con reintentos, los une sin recodificar y les pone `public/musica.wav`. Si se corta, vuelve a correrlo y retoma desde el último tramo terminado. Si cambias la música, borra `out/partes*/` antes.
 
-**Opcional: regenerar los mapas de tiempo.** Con el análisis de `datos/`, `python herramientas/conform_pulso.py` y luego `python herramientas/eventos_reales.py` reescriben `src/ritmo.json` igual byte a byte. `src/cancion.json` sale de la canción sin editar: decodifícala a `public/musica.wav` (`ffmpeg -i musica/<canción>.mp3 -ar 48000 public/musica.wav`), corre `SALIDA=src/cancion.json python herramientas/ritmo_cancion.py` y vuelve al paso 2.
+**Opcional: regenerar los mapas de tiempo.** Con el análisis de `datos/`, `python herramientas/conform_pulso.py` y luego `python herramientas/eventos_reales.py` reescriben `src/ritmo.json` igual byte a byte (los tambores del nautilus salen de la pista final con `python herramientas/tambores_nautilus.py`, después de `sonidos_lectures.py`). `src/cancion.json` sale de la canción sin editar: decodifícala a `public/musica.wav` (`ffmpeg -i musica/<canción>.mp3 -ar 48000 public/musica.wav`), corre `SALIDA=src/cancion.json python herramientas/ritmo_cancion.py` y vuelve al paso 2.
 
 ### `// 05` Estructura
 

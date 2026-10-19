@@ -125,6 +125,18 @@ tiempo ya no depende de una voz: la fija el mapa de ritmo.
   cortes: caída lenta hacia la espiral del punto fijo α de la Julia, con rotación leve y la paleta fluyendo, clímax
   de luz suave y la lente que se cierra en Lorenz (45,5 s). En ese tramo, 17 % menos de exposición y de bloom.
 
+### Nautilus al ritmo del redoble (desde la rama `formatos`)
+
+- Los tabiques del nautilus seguían las notas del arpegio de la música sintetizada original. Ahora siguen el redoble
+  de tambores que suena en ese tramo de la canción: 22 golpes entre 78,0 y 80,45 s de video, detectados en la pista
+  final por `herramientas/tambores_nautilus.py` («tamboresNautilus» en `src/ritmo.json`). Coinciden con los toms,
+  cajas y bombos del análisis de la canción llevados a la edición.
+- Cada golpe pone el tabique siguiente, junto al anterior, repartidos parejo desde el primer giro hasta la punta, con
+  un destello según la fuerza del golpe. La concha mantiene la curva de crecimiento de la aprobada pero avanza a
+  saltos con los golpes, y se adelanta lo justo para que el tabique nuevo tenga dónde caer.
+- Solo cambia ese tramo: en el render por tramos, `v07`-`v08` de `Clase` (tramo de 300) y `v09` de `ClaseYT` y
+  `ClaseTT` (tramo de 250).
+
 ### Formatos 16:9 y 9:16 de la aprobada (rama `formatos`, desde la tag `unbreakable-aprobada-4x5`)
 
 - Mismo video, tiempos, música, escenas, look y animaciones; solo cambia la composición de cada cuadro. La 4:5 sale
@@ -296,5 +308,6 @@ python herramientas/render.py 300 4 Clase                    # igual con ClaseYT
 ```
 
 Para regenerar los mapas de tiempo (ya versionados): `python herramientas/conform_pulso.py` y luego
-`python herramientas/eventos_reales.py` reescriben `src/ritmo.json` byte a byte igual. Si cambia la música, borra
+`python herramientas/eventos_reales.py` reescriben `src/ritmo.json` byte a byte igual; los tambores del nautilus
+salen de la pista final con `python herramientas/tambores_nautilus.py`, después de `sonidos_lectures.py`. Si cambia la música, borra
 `out/partes*/` antes de volver a renderizar.

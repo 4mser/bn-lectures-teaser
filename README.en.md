@@ -69,7 +69,7 @@ The animation was first designed on a fixed 120 BPM grid (one beat = 0.5 s). It 
 1. **Analysis.** `datos/analisis-cancion.json` holds the song's timing: beats, downbeats, phrases, impacts, braams, risers, silences and per-band onsets. Times only, no audio.
 2. **Conform.** `herramientas/conform_pulso.py` makes each animation beat one beat of the song (0.4616 s). Everything runs 8.3 % faster; scenes are fitted by repeating or removing whole beats, and their starts, ends and transitions are left alone. It writes `src/ritmo.json`.
 3. **Edit.** The song is edited by whole bars (`herramientas/editar_cancion.py`): every splice lands on a downbeat, with a 20 ms equal-power crossfade. It ends up at 93.28 s.
-4. **Real events.** `herramientas/ritmo_cancion.py` detects the 469 notes of the string ostinato, with their 3+3+2 accents, and the drums (`src/cancion.json`). Each note sends a thin glint across the lights in the frame; each hit, a sweep and a 0.7 % camera push. `herramientas/eventos_reales.py` finds the three drops of the coda (88.62 · 89.08 · 89.55 s), which write LEC, TUR and ES.
+4. **Real events.** `herramientas/ritmo_cancion.py` detects the 469 notes of the string ostinato, with their 3+3+2 accents, and the drums (`src/cancion.json`). Each note sends a thin glint across the lights in the frame; each hit, a sweep and a 0.7 % camera push. `herramientas/eventos_reales.py` finds the three drops of the coda (88.62 · 89.08 · 89.55 s), which write LEC, TUR and ES, and `herramientas/tambores_nautilus.py` finds the 22 hits of the drum roll under the nautilus, one per septum.
 5. **Reading.** `src/ritmo.ts` reads those maps and converts them to scene time. Scenes only ask "what happens at second t?".
 
 `herramientas/sincronia_audio.py` and `herramientas/correlacion_onsets.py` measure sync on the finished mp4.
@@ -142,7 +142,7 @@ python herramientas/render.py 300 4 ClaseTT   # → out/BN-Lectures-teaser-9x16.
 
 `render.py` takes the chunk size in frames, the concurrency and the composition. It renders in chunks, each in its own process with retries, joins them without re-encoding and adds `public/musica.wav`. If it stops, run it again and it picks up after the last finished chunk. If you change the music, delete `out/partes*/` first.
 
-**Optional: regenerate the timing maps.** From the analysis in `datos/`, `python herramientas/conform_pulso.py` followed by `python herramientas/eventos_reales.py` rewrites `src/ritmo.json` byte for byte. `src/cancion.json` comes from the unedited song: decode it to `public/musica.wav` (`ffmpeg -i musica/<song>.mp3 -ar 48000 public/musica.wav`), run `SALIDA=src/cancion.json python herramientas/ritmo_cancion.py`, and go back to step 2.
+**Optional: regenerate the timing maps.** From the analysis in `datos/`, `python herramientas/conform_pulso.py` followed by `python herramientas/eventos_reales.py` rewrites `src/ritmo.json` byte for byte (the nautilus drums come from the final track with `python herramientas/tambores_nautilus.py`, after `sonidos_lectures.py`). `src/cancion.json` comes from the unedited song: decode it to `public/musica.wav` (`ffmpeg -i musica/<song>.mp3 -ar 48000 public/musica.wav`), run `SALIDA=src/cancion.json python herramientas/ritmo_cancion.py`, and go back to step 2.
 
 ### `// 05` Layout
 
