@@ -2390,33 +2390,19 @@ const girasol = (ctx: Ctx, d: Disp, t: number) => {
       }
     });
 };
-// Tabiques al ritmo del redoble de la canción («tamboresNautilus», herramientas/tambores_nautilus.py). La concha sigue
-// la misma curva de crecimiento de la aprobada, pero avanza a saltos: en cada golpe recorre en 0,1 s lo que antes
-// crecía hasta el golpe siguiente. Cada golpe pone un tabique en la punta (si ya hay un giro anterior al que llegar;
-// si no, la punta destella); los golpes que caen con la concha ya completa rellenan los huecos más grandes, y
-// durante la zambullida hacia el ojo, huecos cada vez más adentro, donde mira la cámara.
+// Tabiques al ritmo del redoble de la canción («tamboresNautilus», herramientas/tambores_nautilus.py), en orden: cada
+// golpe pone el tabique siguiente, junto al anterior, desde el primer giro hacia la punta y repartidos parejo por la
+// concha. La concha sigue la curva de crecimiento de la aprobada, avanzando a saltos con los golpes (en 0,1 s recorre lo
+// que antes crecía hasta el golpe siguiente), y se adelanta lo necesario para que el tabique nuevo tenga dónde caer.
 const TAMB_NAU = ((RITMO as unknown as { tamboresNautilus?: { t: number; v: number }[] }).tamboresNautilus ?? []).slice().sort((a, b) => a.t - b.t);
-const T_HUNDE = S("silencio") - 1.3;
 const T_LLENA = T_NAU - 0.2 + 1.3;
 const creceNau = (t: number) => eIO(pr(t, T_NAU - 0.2, 1.3));
 const TH_MIN = TAU + 0.15;
 const TABIQUES = (() => {
+  const n = TAMB_NAU.length;
+  const tab = TAMB_NAU.map((g, k) => ({ ...g, th: TH_MIN + (n > 1 ? (k / (n - 1)) * (TH_NAU - 0.1 - TH_MIN) : 0) }));
   const G = TAMB_NAU.filter((g) => g.t < T_LLENA);
   const sig = G.map((g, k) => G[k + 1]?.t ?? T_LLENA);
-  const tab: { t: number; v: number; th: number }[] = [];
-  G.forEach((g, k) => {
-    const th = TH_NAU * creceNau(sig[k]) - 0.12;
-    if (th >= TH_MIN) tab.push({ ...g, th });
-  });
-  for (const g of TAMB_NAU.filter((x) => x.t >= T_LLENA)) {
-    const ths = tab.map((x) => x.th).concat([TH_MIN - 0.3, TH_NAU - 0.02]).sort((a, b) => a - b);
-    const huecos = ths.slice(0, -1).map((th, i) => ({ a: th, b: ths[i + 1] }));
-    // con la concha completa: el hueco más grande; en la zambullida: el más grande de la mitad interior
-    const lim = g.t < T_HUNDE ? Infinity : TH_MIN + (TH_NAU - TH_MIN) * 0.55;
-    const cand = huecos.filter((h) => (h.a + h.b) / 2 <= lim);
-    const h = (cand.length ? cand : huecos).reduce((m, x) => (x.b - x.a > m.b - m.a ? x : m));
-    tab.push({ ...g, th: Math.max(TH_MIN, (h.a + h.b) / 2) });
-  }
   return { G, sig, tab };
 })();
 // Tiempo escalonado: avanza a saltos con cada golpe (ataque de 0,1 s) y entre golpes queda quieto.
@@ -2427,11 +2413,20 @@ const tNau = (t: number) => {
   while (k + 1 < G.length && G[k + 1].t <= t) k++;
   return t >= T_LLENA ? t : G[k].t + (sig[k] - G[k].t) * eOut(pr(t, G[k].t, 0.1));
 };
+// Punta mínima: el último tabique puesto más un margen, con el mismo ataque de 0,1 s.
+const frenteNau = (t: number) => {
+  const { tab } = TABIQUES;
+  let k = -1;
+  while (k + 1 < tab.length && tab[k + 1].t <= t) k++;
+  if (k < 0) return 0;
+  const prev = k > 0 ? tab[k - 1].th : tab[0].th - 0.3;
+  return prev + (tab[k].th - prev) * eOut(pr(t, tab[k].t, 0.1)) + 0.14;
+};
 const nautilus = (ctx: Ctx, d: Disp, t: number) => {
   if (t < T_NAU - 0.3 || t >= T_SIL + 0.3) return;
   const rot = 0.18 * (t - T_GIR);
-  const crece = creceNau(tNau(t));
-  const flPunta = TABIQUES.G.reduce((m, g) => (t >= g.t ? Math.max(m, g.v * Math.exp(-(t - g.t) * 9)) : m), 0);
+  const crece = Math.min(1, Math.max(creceNau(tNau(t)), frenteNau(t) / TH_NAU));
+  const flPunta = TABIQUES.tab.reduce((m, g) => (t >= g.t ? Math.max(m, g.v * Math.exp(-(t - g.t) * 9)) : m), 0);
   const destello = TABIQUES.tab.reduce((m, g) => (t >= g.t ? Math.max(m, g.v * Math.exp(-(t - g.t) * 7)) : m), 0);
   // v1m: la cámara se hunde siguiendo la curva hacia el ojo de la espiral (zoom y giro centrados en el ojo) y el ojo
   // viaja al centro de la zona visual: es la misma estrella que queda en el silencio
@@ -2470,7 +2465,7 @@ const nautilus = (ctx: Ctx, d: Disp, t: number) => {
     // levemente curvo
     for (const g of TABIQUES.tab) {
       if (t < g.t || g.th > th1 + 1e-3) continue;
-      const al = eOut(pr(t, g.t, 0.06));
+      const al = eOut(pr(t, g.t + 0.04, 0.06));
       const fl = g.v * Math.exp(-(t - g.t) * 7);
       const a = Z(espNau(d, g.th, rot));
       const b = Z(espNau(d, Math.max(0, g.th - TAU), rot));
