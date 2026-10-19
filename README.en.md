@@ -185,6 +185,7 @@ docs/assets/           GIFs and SVG for this README
 ### `// 07` Credits
 
 - **Made by** [B&N Solutions](https://bnsolutions.cl).
+- **Series simulation engine** (`teaser/src/lab/`, `biblioteca/modulos/lab-serie`): Benjamín Campos, from [BN_Electromagnetismo](https://github.com/B3njjaman/BN_Electromagnetismo), published here with his permission under the same MIT license.
 - **Music:** "Unbreakable Spirit (Action Cinematic Epic)" by RaspberryMusic, on [Pixabay](https://pixabay.com/music/adventure-unbreakable-spirit-action-cinematic-epic-591786/), under the Pixabay Content License. Not included in the repository.
 - **Fonts:** Space Grotesk and IBM Plex Mono, under the SIL Open Font License 1.1 (`teaser/public/fonts/OFL.txt`).
 - **Tools:** Remotion, React, TypeScript, WebGL2, numpy, Pillow and imageio-ffmpeg.
