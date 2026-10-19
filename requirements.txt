@@ -1,0 +1,4 @@
+# Versiones con las que se generaron los assets del teaser aprobado
+numpy==2.5.4
+imageio-ffmpeg==0.6.0
+pillow==13.0.0
